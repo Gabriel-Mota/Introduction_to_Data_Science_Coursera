@@ -1,0 +1,250 @@
+R Assignment: Classification of Ocean Microbes
+========================================================
+
+## Step 1: Read and summarize the data
+Read and summarize the data
+```{r}
+data <- read.csv("seaflow_21min.csv")
+summary(data)
+```
+
+### Question 1
+**How many particles labeled "synecho" are in the file provided?**
+```{r}
+summary(data$pop)["synecho"]
+```
+
+### Question 2
+**What is the 3rd Quantile of the field fsc_small?**
+```{r}
+summary(data$fsc_small)["3rd Qu."]
+```
+
+## Step 2: Split the data into test and training sets
+Division of the data into two equal subsets, one for training and one for testing, in an unbiased manner.
+```{r}
+
+library(caret)
+
+##Set seed, so results can be reproducible
+set.seed(123)
+
+## Create partition based on the pop column of the dataset, with 50% of the data going into training
+aux <- createDataPartition(data$pop, p=0.5, list = FALSE)
+
+## Training set
+train <- data[aux,]
+
+## Test set
+test <- data[-aux,]
+```
+
+### Question 3
+**What is the mean of the variable "time" for your training set?**
+```{r}
+mean(train$time)
+```
+
+
+## Step 3: Plot the data
+Plot of **_pe_** against **_chl\_small_** colored by **_pop_**
+```{r}
+library(ggplot2)
+
+ggplot(aes(x = pe, y = chl_small, color = pop), data = data) + geom_point() + ylab("Chlorophyll wavelength of light") + xlab("Phycoerythrin fluorescence")
+```
+
+### Question 4
+**In the plot of pe vs. chl_small, the particles labeled ultra should appear to be somewhat "mixed" with two other populations of particles. Which two populations?**  
+As can be observed in the plot, the answer is *pico* and *nano*
+
+## Step 4: Train a decision tree.
+Training a tree as a function of the sensor measurements: fsc\_small + fsc\_perp + fsc\_big + pe + chl\_big + chl\_small
+
+```{r}
+library(rpart)
+
+##formula
+fol <- formula(pop ~ fsc_small + fsc_perp + fsc_big + pe + chl_big + chl_small)
+
+##Decision Tree model
+model <- rpart(fol, method="class", data=train)
+
+print(model)
+```
+
+### Question 5
+**Which populations, if any, is your tree incapable of recognizing?**  
+The crypto population is not recognized by the tree, since it does not appear in any of the branches.
+
+### Question 6
+**What is the value of the threshold on the pe field learned in your model?**
+The value is 5000 (can be seen on branch 2 and 3).
+
+### Question 7
+**Based on your decision tree, which variables appear to be most important in predicting the class population?**  
+The variables *pe* and *chl_small*, since these are the only ones present in the tree.
+
+## Step 5: Evaluate the decision tree on the test data.
+Using the predict function to generate predictions on the test data, and compare these predictions with the class labels in the test data itself.
+
+```{r}
+testPred <- predict(model, newdata = test, type = "class")
+
+confusionMatrix(testPred, test$pop)
+```
+
+### Question 8
+**How accurate was your decision tree on the test data?**  
+The decision tree on the test data showed an accuracy of 0.8527, as can be seen on the Confusion Matrix.
+
+## Step 6: Build and evaluate a random forest.
+Repeating the same methodology used for the evaluation of the decision tree, this time a random forest was generated.
+```{r}
+library(randomForest)
+
+##Random Forest model
+modelRF <- randomForest(fol, method="class", data=train)
+
+print(modelRF)
+```
+
+Confusion Matrix to evaluate the Random Forest model
+```{r}
+testPredRF <- predict(modelRF, newdata = test, type = "class")
+
+confusionMatrix(testPredRF, test$pop)
+```
+
+### Question 9
+**What was the accuracy of your random forest model on the test data?**  
+The accuracy of the Random Forest model was 0.919, as can be seen in the generated Confusion Matrix.  
+
+An estimate of variable importance was obtained based on the Gini impurity.
+```{r}
+importance(modelRF)
+```
+The higher the number, the more the gini impurity score decreases by branching on this variable, indicating that the variable is more important.  
+As it was observed with the Decision Tree model, *pe* and *chl_small* are the more important variables, with higher values for *MeanDecreaseGini*.
+
+### Question 10
+**You should be able to determine which variables appear to be most important in terms of the gini impurity measure. Which ones are they?**  
+The 3 most important variables in terms of the gini impurity measure, are *pe*, *chl_small* and *chl_big*
+
+## Step 7: Train a support vector machine model and compare results.
+Like it was made for the Decision Tree and Random Forest, a new model was trained, based on SVM.
+```{r}
+library(e1071)
+modelSVM <- svm(fol, method = "class", data = train)
+modelSVM
+```
+
+Confusion Matrix to evaluate the SVM model
+```{r}
+testPredSVM <- predict(modelSVM, newdata = test, type = "class")
+
+confusionMatrix(testPredSVM, test$pop)
+```
+
+### Question 11
+**What was the accuracy of your support vector machine model on the test data?**  
+The SVM model accuracy was 0.9193.
+
+## Step 8: Compare confusion matrices
+The 3 confusion matrices previously generated were compared and analyzed, in order to answer the next question.
+
+### Question 12
+**What appears to be the most common error the models make?**  
+The most common error appears to be mistaken ultra as pico.
+
+## Step 8: Sanity check the data
+The measurements (fsc\_small, fsc\_perp, fsc\_big, pe, chl\_small, chl\_big) in this dataset are all supposed to be continuous. A deeper analysis as made in order to confirm if in fact this is true.  
+By observing the data summary previous presented in **step 1**, the measurement *fsc\_big* seems to have a very strange distribution of values. Printing this variable unique values revealed a very small variety.
+```{r}
+unique(data$fsc_big)
+```
+
+### Question 13
+**The variables in the dataset were assumed to be continuous, but one of them takes on only a few discrete values, suggesting a problem. Which variable exhibits this problem?**  
+Clearly there is something wrong with the measurement values registered on *fsc\_big*.  
+This also helps to explain the low *MeanDecreaseGini* value related to this variable, observed in **step 6**.
+
+
+There is more subtle issue with data as well. Plotting *time* vs. *chl\_big*, reveals a band of the data that looks out of place.
+```{r}
+library(ggplot2)
+
+ggplot(aes(x = time, y = chl_big, color = pop), data = data) + geom_point(alpha=0.2) + guides(colour = guide_legend(override.aes = list(alpha = 1)))
+```
+
+This band corresponds to data from a particular file for which the sensor may have been miscalibrated.
+
+This data was removed from the dataset by filtering out all data associated with **_file\_id_ 208**.
+```{r}
+data2 <- subset(data, file_id != 208)
+```
+
+Then the experiment was repeated for all three methods, making sure to split the dataset into training and test sets after filtering out the bad data.  
+New plot:
+```{r}
+library(ggplot2)
+
+ggplot(aes(x = time, y = chl_big, color = pop), data = data2) + geom_point(alpha=0.2) + guides(colour = guide_legend(override.aes = list(alpha = 1)))
+```
+
+New Train and Test sets:
+```{r}
+##Set seed, so results can be reproducible
+set.seed(123)
+
+## Create partition based on the pop column of the dataset, with 50% of the data going into training
+aux <- createDataPartition(data2$pop, p=0.5, list = FALSE)
+
+## Training set
+train2 <- data2[aux,]
+
+## Test set
+test2 <- data2[-aux,]
+```
+
+New Decision Tree model:
+```{r}
+fol2 <- formula(pop ~ fsc_small + fsc_perp + fsc_big + pe + chl_big + chl_small)
+
+modelDT2 <- rpart(fol2, method = "class", data = train2)
+
+testPredDT2 <- predict(modelDT2, newdata = test2, type = "class")
+
+confusionMatrix(testPredDT2, test2$pop)
+```
+
+New Random Forest model:
+```{r}
+modelRF2 <- randomForest(fol2, method = "class", data = train2)
+
+testPredRF2 <- predict(modelRF2, newdata = test2, type = "class")
+
+confusionMatrix(testPredRF2, test2$pop)
+```
+
+New SVM model:
+```{r}
+modelSVM2 <- svm(fol2, method = "class", data = train2)
+
+testPredSVM2 <- predict(modelSVM2, newdata = test2, type = "class")
+
+confusionMatrix(testPredSVM2, test2$pop)
+```
+
+### Question 14
+**After removing data associated with file_id 208, what was the effect on the accuracy of your svm model?**  
+The accuracy value from the previous model was 0.9193. With this new model the accuracy was 0.9727, representing an improvement of 0.0534, or 5,34%.
+
+
+## Author
+This work was elaborated by **Gabriel Mota** for the *Introduction to Data Science* Coursera's course.  
+**23/08/2014**
+
+
+
+

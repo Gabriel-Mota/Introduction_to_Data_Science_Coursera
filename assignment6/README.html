@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Tableau Assignment</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>Tableau Assignment</h1>
+
+<p>In this assignment, you will use Tableau to create a series of visualizations and use them to explore a dataset. </p>
+
+<p>While statistical programming environments such as R, MATLAB, Python (with appropriate libraries such as matplotlib), Octave, SAS, and SPSS offer extensive visualization capabilities and offer some support for interactivity, they were originally designed to provide maximum control in producing publication-quality static images.  In contrast, as a data scientist, you will often be performing exploratory visual analytics &ndash; using visualization not as a presentation tool, but as an analysis tool.  </p>
+
+<p>Moreover, you will often be asked to produce interactive data products &ndash; for example, dashboards &ndash; that your stakeholders can use to answer their own questions.  </p>
+
+<p>In these scenarios, many find that Tableau and other visual analytics tools can dramatically improve productivity relative to low-level programming environments where details must be coded by hand (although neither approach subsumes the other.)</p>
+
+<p>For the purposes of this class, Tableau offers another benefit in that it is relatively easy to get started using regardless of your background, allowing you to spend more time considering the visualization principles being employed and less time wrestling with code. </p>
+
+<p>The learning objectives for this assignment are to gain experience with Tableau, gain experience using visualization for data exploration, and gain experience using interactive visualizations to tell a story. </p>
+
+<p>The assignment will be graded by peer review.</p>
+
+<p>Tableau is also a lot of fun &ndash; you can create some pretty sophisticated interactive visualizations in just a few seconds.</p>
+
+<h2>Instructions</h2>
+
+<ol>
+<li><p>Go to the <a href="http://www.tableausoftware.com/tft/mooc?lsd=TFT%20-%20MOOC%20-%20Landing%20Registration%20-%20Coursera%20DS%2020130429">Tableau for Teaching Download Link</a>, fill out the form on the right hand side of the page, and download your copy of Tableau. If you are a student, under &ldquo;Job Title&rdquo;, mark Student, and under &ldquo;Organization&rdquo;, please input the name of your school.   This link will provide you with a version of Tableau if you are using Windows or a Mac.  </p>
+
+<p>If you do not have access to Windows or a Mac, you have a few options:</p></li>
+</ol>
+
+<ul>
+<li>You can <a href="https://class.coursera.org/datasci-002/wiki/tableau_aws">setup Tableau on a free windows AWS instance</a> to complete the assignment.  Note that performance will be slower using Tableau over the network, but it was quite usable in our tests.<br/></li>
+<li>MS also offers <a href="http://www.modern.ie/en-us/virtualization-tools#downloads">pre-configured VMs for Windows XP through 8, in VMWare, VirtualBox and Parallels</a> (they even include curl instructions). These are trial versions, intended for testing Internet Explorer, but the default &#39;IEUser&#39; account is an admin, so there shouldn&#39;t be an issue installing software. <a href="http://virtualization.modern.ie/vhd/virtualmachine_instructions.pdf?v=1.1">More details (including admin pw)</a>.<br/></li>
+<li>There is <a href="http://www.pcworld.com/article/2016057/how-to-test-drive-windows-8-for-free-in-virtualbox.html">an evaluation version of Windows 8 offered which can be run in Virtual Box</a>.<br/></li>
+</ul>
+
+<ol>
+<li><p>Once you have access to a working version of Tableau, and enter the product key <strong>TDVN-65A9-0810-D3D3-8906</strong></p></li>
+<li><p><a href="https://spark-public.s3.amazonaws.com/datasci/VisualizationAssignment.twbx">Download the Tableau assignment workbook</a>.</p></li>
+<li><p>Open the sheet titled &ldquo;Start Here&rdquo; and read the instructions</p></li>
+<li><p>There are 7 tasks, each associated with one or more sheets in the workbook.</p></li>
+<li><p>Follow the instructions for each sheet.  Typically this involves recreating a visualization you are provided.</p></li>
+<li><p>If you need help, consult the <a href="http://www.tableausoftware.com/learn/training">documentation</a>.</p></li>
+<li><p>For the last task, you will be asked to publish your workbook to Tableau Public using the instructions below.  Your peer reviewers will use the public version to assess your solution.</p></li>
+</ol>
+
+<p>1) Upload the workbook</p>
+
+<p>2) Select &ldquo;Show sheets as tabs&rdquo; &ndash; this is important. To find this option, follow these steps:<br/>
+2a) Drop Down box under your User Name<br/>
+2b) Select &ldquo;User Preferences&rdquo;<br/>
+2c) Select workbook you uploaded<br/>
+2d) Setting check &ldquo;Show Sheets as tabs&rdquo; (this part is absolutely critical)  </p>
+
+<p>3) Submit the URL for <strong>one single view</strong> in your workbook.</p>
+
+<p>4) Reviewers will look for the tabs along the top row for additional views</p>
+
+</body>
+
+</html>
+

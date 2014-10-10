@@ -92,7 +92,7 @@ Divide the data into two equal subsets, one for training and one for testing.  M
 
 <p>Many statistical models in R provide an interface of the form
 <pre>
-model <- train(formula, dataframe)
+model = train(formula, dataframe)
 </pre>
 </p>
 
@@ -100,18 +100,17 @@ model <- train(formula, dataframe)
 
 <p>A formula object describes the relationship between the independent variables and the response variable, and can be expressed with the syntax
 
-<pre>response ~ var1 + var2 + var3</pre>
-
+<code>response ~ var1 + var2 + var3</code>
 and used with the <code>formula</code> function to construct the formula object itself:
 <pre>
-fol <- formula(response ~ var1 + var2 + var3)
+fol = formula(response ~ var1 + var2 + var3)
 </pre>
 </p>
 
 <p>The rpart library uses this convention.  Assuming your training data is in a data frame called <code>training</code> and you have constructed a formula objec tcalled <code>fol</code>, you can construct a decision tree using the following syntax (included here to avoid you struggling with a couple of unusual aspects of R):</p>
 
 <pre>
-model <- rpart(fol, method="class", data=training)
+model = rpart(fol, method="class", data=training)
 </pre> 
 
 <p>Train a tree as a function of the sensor measurements: fsc_small + fsc_perp + chl_small + pe + chl_big + chl_small</p>
@@ -120,17 +119,17 @@ model <- rpart(fol, method="class", data=training)
 
 <p>The output is a set of decision nodes, one node per line.  Each line is indented indicating the height of the tree.  Here is a bogus example of a tree:</p>
 
-<pre>
+
  1) root 33456 22345 nano (0.0016 0.17 0.29 0.25 0.28)  
-   2) chl_small< 31000 26238 15772 pico (0 0.22 0.4 3.8e-05 0.38)  
-     4) fsc_perp< 2040 11430  1913 pico (0 8.7e-05 0.83 8.7e-05 0.17) *
-       10) chl_small>=12000 7065   628 nano (0 0.88 0 0 0.12) *
-       11) chl_small< 12000 9000  2232 ultra (0 0.13 0.097 0 0.77) *
-     5) fsc_perp>=2040 14808  5500 ultra (0 0.39 0.064 0 0.55)  
-   3) chl_small>=31000 9933   780 synecho (0.0058 0.054 0.0044 0.92 0.014)  
-     6) pe>=17532 681   156 nano (0.085 0.77 0 0.069 0.075) *
-     7) pe< 17532 9252   146 synecho (0 0.0014 0.0048 0.98 0.0096) *
-</pre>
+ ..2) chl_small< 31000 26238 15772 pico (0 0.22 0.4 3.8e-05 0.38)  
+ ....4) fsc_perp< 2040 11430  1913 pico (0 8.7e-05 0.83 8.7e-05 0.17) *  
+ ......10) chl_small>=12000 7065   628 nano (0 0.88 0 0 0.12) *  
+ ......11) chl_small< 12000 9000  2232 ultra (0 0.13 0.097 0 0.77) *  
+ ....5) fsc_perp>=2040 14808  5500 ultra (0 0.39 0.064 0 0.55)  
+ ..3) chl_small>=31000 9933   780 synecho (0.0058 0.054 0.0044 0.92 0.014)  
+ ....6) pe>=17532 681   156 nano (0.085 0.77 0 0.069 0.075) *  
+ ....7) pe< 17532 9252   146 synecho (0 0.0014 0.0048 0.98 0.0096) *
+
 
 <p>To make a prediction, walk down the tree applying the predicates to determine which branch to take.  For example, in this bogus tree, a particle with chl_small=25000 and fsc_perp=1000 would take branch 2, branch 4, then branch 10, and be classified as nano.</p>
 
@@ -152,7 +151,7 @@ model <- rpart(fol, method="class", data=training)
 <p>Load the <code>randomForest</code> library, then call <code>randomForest</code> using the formula object and the data, as you did to build a single tree:</p>
 <pre>
 library(randomforest)
-model <- randomForest(fol, data=trainingdata)
+model = randomForest(fol, data=trainingdata)
 </pre>
 
 <p>Evaluate this model on the test data the same way you did for the tree.</p>
@@ -168,7 +167,7 @@ model <- randomForest(fol, data=trainingdata)
 
 <h3>Step 7: Train a support vector machine model and compare results. </h3>
 
-<p>Use the <code>e1071</code> library and call <code>model <- svm(fol, data=trainingdata)</code>.
+<p>Use the <code>e1071</code> library and call <code>model = svm(fol, data=trainingdata)</code>.
 
 
 <p>Answer Question 11.</p> 
